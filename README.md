@@ -1,4 +1,3 @@
-"""
 # Poketwo Valentine's Day Event Solver
 
 A self-bot designed to automate interactions with Pokétwo during the Valentine's Day event.
