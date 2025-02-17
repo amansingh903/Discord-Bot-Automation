@@ -15,7 +15,7 @@ A self-bot designed to automate interactions with Pokétwo during the Valentine'
 ## Installation
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/yourrepository.git
+   git clone https://github.com/amansingh903/Poketwo-Valentines-Day-Event-Solver
    cd yourrepository
 
 2. **Install Dependencies**:
