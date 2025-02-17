@@ -67,7 +67,7 @@ async def spam():
         if channel:
             message_options = ["<@716390085896962058> breeding", "<@716390085896962058> breed", "<@716390085896962058> daycare"]
             await channel.send(random.choice(message_options))
-            await asyncio.sleep(random.uniform(300, 400))
+            await asyncio.sleep(random.uniform(400, 500))
         else:
             print("Channel not found. Please check the channel ID in the config.")
             break
