@@ -7,11 +7,23 @@ import random
 import requests
 from utility import Utils
 import time
+import sys
+import codecs
+
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer)
 
 bot = commands.Bot(command_prefix="!", self_bot=True)
 sleeping = config.sleep
+
 global count
 count = 2
+
+global spamming_active
+spamming_active = True
+
+global removing
+removing = True
+
 
 def click_button(guild_id, channel_id, message_id, button_custom_id, user_id, session_id, application_id):
     url = f"https://discord.com/api/v10/interactions"
@@ -43,14 +55,16 @@ def click_button(guild_id, channel_id, message_id, button_custom_id, user_id, se
 
 
 async def market_search(id,gender):
+    global removing
     channel = bot.get_channel(config.ChannelId)
     if channel:
+        removing = True
         if gender.lower() == 'male':
             await asyncio.sleep(random.randint(5, 10))
-            await channel.send(f'<@716390085896962058> m s --n {id} --gender female')
+            await channel.send(f'<@716390085896962058> m s --n {id} --gender female --order price')
         else:
             await asyncio.sleep(random.randint(5, 10))
-            await channel.send(f'<@716390085896962058> m s --n {id} --gender male')
+            await channel.send(f'<@716390085896962058> m s --n {id} --gender male --order price')
 
 
 
@@ -62,7 +76,8 @@ async def market_buy(listing_id):
 
 
 async def spam():
-    while not sleeping:
+    global spamming_active
+    while spamming_active and not sleeping:
         channel = bot.get_channel(config.ChannelId)
         if channel:
             message_options = ["<@716390085896962058> breeding", "<@716390085896962058> breed", "<@716390085896962058> daycare"]
@@ -84,7 +99,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(msg: discord.Message):
-    global count
+    global count, spamming_active, removing
     channel = bot.get_channel(config.ChannelId)
     message = msg.content
 
@@ -93,15 +108,28 @@ async def on_message(msg: discord.Message):
 
         for embed in msg.embeds:
             print(embed.title)
-            print(embed.description)
+            print(embed.description.encode('utf-8', 'ignore').decode('utf-8'))
             if 'Daycare' in embed.title:
                 for field in embed.fields:
+                    print(field)
                     if "Empty" in field.value:
+                        removing = False
+                        spamming_active = False
                         await asyncio.sleep(random.randint(5, 10))
                         await channel.send(f'<@716390085896962058> daycare add l')
                         await asyncio.sleep(random.randint(5, 10))
                         break
-
+                    elif field.name == "Daycare pokémon (1/2)" or "Medium compatibility" in field.value or "Low compatibility" in field.value or "Incompatible" in field.value:
+                        spamming_active = False
+                        field_value = str(field.value)
+                        match = re.search(r'`([^`]+)`', field_value)
+                        if match:
+                            extracted_value = match.group(1) 
+                            await asyncio.sleep(random.randint(5, 10))
+                            await channel.send(f'<@716390085896962058> daycare remove {extracted_value}')
+                        else:
+                            print("No match found")
+                        
             if embed.description and "Pokétwo Marketplace" in embed.title:
                 marketpattern = r"^`(\d+)`.*?•\s*[\d\.]+%\s*•\s*([\d,]+)\s*pc"
                 matches = re.findall(marketpattern, embed.description, flags=re.MULTILINE)
@@ -150,9 +178,37 @@ async def on_message(msg: discord.Message):
                     await market_search(name,gender)
                     count += 1
                 else:
+                    print("Spamming resumed")
                     count += 1
             else:
                 pass
+
+        if "from the daycare? All the progress will be lost" in message:
+            await asyncio.sleep(random.randint(2, 5))
+            try:
+                # Find the 'Confirm' button by label
+                target_button = None
+                for component in msg.components:
+                    for button in component.children:
+                        if button.label == 'Confirm':
+                            target_button = button
+                            break
+                    if target_button:
+                        break
+
+                if target_button:
+                    Utils.click_button(
+                        token=config.token,
+                        message_id=msg.id,
+                        custom_id=target_button.custom_id,
+                        channel_id=str(msg.channel.id),
+                        guild_id=str(msg.guild.id),
+                        application_id=str(msg.author.id),
+                        session_id=Utils.generate_session_id(),
+                        component_type=2  # 2 = Button component type
+                    )
+            except Exception as e:
+                print(f"Error clicking button: {e}")
 
         if "Are you sure you want to buy this" in message:
             await asyncio.sleep(random.randint(1, 2))
@@ -181,8 +237,9 @@ async def on_message(msg: discord.Message):
             except Exception as e:
                 print(f"Error clicking button: {e}")
 
-            await asyncio.sleep(random.randint(10, 15))
+            await asyncio.sleep(1)
             await channel.send(f'<@716390085896962058> daycare add l')
+
 
 
 
