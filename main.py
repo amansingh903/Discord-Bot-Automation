@@ -237,7 +237,7 @@ async def on_message(msg: discord.Message):
             except Exception as e:
                 print(f"Error clicking button: {e}")
 
-            await asyncio.sleep(1)
+            await asyncio.sleep(10)
             await channel.send(f'<@716390085896962058> daycare add l')
 
 
