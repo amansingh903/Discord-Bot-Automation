@@ -26,7 +26,9 @@ A self-bot designed to automate interactions with Pokétwo during the Valentine'
 - Edit config.py to include your bot token, channel ID, guild ID
 
 ## To run
-- **Run the bot using**: python main.py or python3 main.py
+- **Run the bot using**:
+  ```bash
+  python main.py
 (Ensure that the bot has the necessary permissions in your Discord server and that it is added as a member.)
 
 ## Important Notes
