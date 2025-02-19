@@ -118,12 +118,11 @@ async def on_message(msg: discord.Message):
                     print(field)
                     if "Empty" in field.value:
                         removing = False
-                        spamming_active = False
                         await asyncio.sleep(random.randint(5, 10))
                         await channel.send(f'<@716390085896962058> daycare add l')
                         await asyncio.sleep(random.randint(5, 10))
                         break
-                    elif field.name == "Daycare pokémon (1/2)" or "Medium compatibility" in field.value or "Low compatibility" in field.value or "Incompatible" in field.value:
+                    elif "High compatibility" not in field.value:
                         spamming_active = False
                         field_value = str(field.value)
                         match = re.search(r'`([^`]+)`', field_value)
@@ -142,8 +141,12 @@ async def on_message(msg: discord.Message):
                     if price_int < 500:
                         await market_buy(listing_id)
                         break  # Stop after the first valid match
+                    else:
+                        spamming_active = True
 
-
+        if "No listings found" in message:
+            spamming_active = True
+            
         if "to the daycare for a deposit cost of" in message:
             await asyncio.sleep(random.randint(2, 5))
             pattern = r"<:_:\d+> Level \d+ ([\w\.'’\-]+(?:\s[\w\.'’\-]+)*)<:([a-z]+):"
@@ -153,6 +156,7 @@ async def on_message(msg: discord.Message):
                 name, gender = match.groups()
             
             if gender == 'male'or gender == 'female':
+                spamming_active = False
                 try:
                     # Find the 'Yes' button by label
                     target_button = None
@@ -183,6 +187,7 @@ async def on_message(msg: discord.Message):
                     count += 1
                 else:
                     print("Spamming resumed")
+                    spamming_active = True
                     count += 1
             else:
                 pass
@@ -213,6 +218,7 @@ async def on_message(msg: discord.Message):
                     )
             except Exception as e:
                 print(f"Error clicking button: {e}")
+            spamming_active = True
 
         if "Are you sure you want to buy this" in message:
             await asyncio.sleep(random.randint(1, 2))
