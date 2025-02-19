@@ -108,7 +108,11 @@ async def on_message(msg: discord.Message):
 
         for embed in msg.embeds:
             print(embed.title)
-            print(embed.description.encode('utf-8', 'ignore').decode('utf-8'))
+            if embed.description is not None:
+                print(embed.description.encode('utf-8', 'ignore').decode('utf-8'))
+            else:
+                print("No description found in embed.")
+
             if 'Daycare' in embed.title:
                 for field in embed.fields:
                     print(field)
