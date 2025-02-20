@@ -77,31 +77,30 @@ async def market_buy(listing_id):
 
 async def spam():
     global spamming_active
-    while spamming_active and not sleeping:
-        channel = bot.get_channel(config.ChannelId)
-        if channel:
-            message_options = ["<@716390085896962058> breeding", "<@716390085896962058> breed", "<@716390085896962058> daycare"]
-            await channel.send(random.choice(message_options))
-            await asyncio.sleep(random.uniform(500, 600))
-        else:
-            print("Channel not found. Please check the channel ID in the config.")
-            break
-async def fix_spam():
-    global spamming_active
-    await asyncio.sleep(random.uniform(1800, 2000))
-    spamming_active = True
-    
+    while not sleeping:
+        if spamming_active:
+            channel = bot.get_channel(config.ChannelId)
+            if channel:
+                message_options = ["<@716390085896962058> breeding", "<@716390085896962058> breed", "<@716390085896962058> daycare"]
+                await channel.send(random.choice(message_options))
+            else:
+                print("Channel not found. Please check the channel ID in the config.")
+                break
+        await asyncio.sleep(random.uniform(500, 600))
+        # Reset spam if it was stopped
+        if not spamming_active:
+            await asyncio.sleep(random.uniform(1800, 2000))  # Wait before reactivating
+            spamming_active = True
+
     
 
 @bot.event
 async def on_ready():
     print(f'\033[91mLOGGED IN AS {bot.user.name} ({bot.user.id})\033[0m')
     print(f'\033[91mSERVER STATUS: ONLINE\033[0m')
-    print(f'\033[91mMade by amansingh903\033[0m')
+    print(f'\033[91mMade by Aman\033[0m')
     print(f'\033[91m------------------------------------------------------------------------------------------\033[0m')
     await spam()
-    await fix_spam()
-
 
 @bot.event
 async def on_message(msg: discord.Message):
