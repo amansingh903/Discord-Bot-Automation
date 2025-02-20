@@ -86,15 +86,21 @@ async def spam():
         else:
             print("Channel not found. Please check the channel ID in the config.")
             break
-
+async def fix_spam():
+    global spamming_active
+    await asyncio.sleep(random.uniform(1800, 2000))
+    spamming_active = True
+    
+    
 
 @bot.event
 async def on_ready():
     print(f'\033[91mLOGGED IN AS {bot.user.name} ({bot.user.id})\033[0m')
     print(f'\033[91mSERVER STATUS: ONLINE\033[0m')
-    print(f'\033[91mMade by who.meee\033[0m')
+    print(f'\033[91mMade by Aman\033[0m')
     print(f'\033[91m------------------------------------------------------------------------------------------\033[0m')
     await spam()
+    await fix_spam()
 
 
 @bot.event
@@ -122,7 +128,7 @@ async def on_message(msg: discord.Message):
                         await channel.send(f'<@716390085896962058> daycare add l')
                         await asyncio.sleep(random.randint(5, 10))
                         break
-                    elif "High compatibility" not in field.value:
+                    elif ("High compatibility" not in field.value) and ('@Pokétwo daycare eggs' not in field.value):
                         spamming_active = False
                         field_value = str(field.value)
                         match = re.search(r'`([^`]+)`', field_value)
