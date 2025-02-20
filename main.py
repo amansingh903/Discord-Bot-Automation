@@ -218,7 +218,7 @@ async def on_message(msg: discord.Message):
                     )
             except Exception as e:
                 print(f"Error clicking button: {e}")
-            await channel.send(f'<@716390085896962058> daycare add l')
+            await channel.send(f'<@716390085896962058> daycare')
             spamming_active = True
 
         if "Are you sure you want to buy this" in message:
