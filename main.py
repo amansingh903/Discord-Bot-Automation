@@ -227,7 +227,7 @@ async def on_message(msg: discord.Message):
             spamming_active = True
 
         if "Are you sure you want to buy this" in message:
-            await asyncio.sleep(random.randint(1, 2))
+            await asyncio.sleep(1)
             try:
             # Find the 'Confirm' button by label
                 target_button = None
@@ -253,7 +253,7 @@ async def on_message(msg: discord.Message):
             except Exception as e:
                 print(f"Error clicking button: {e}")
 
-            await asyncio.sleep(1)
+            await asyncio.sleep(1.7)
             await channel.send(f'<@716390085896962058> daycare add l')
 
 
